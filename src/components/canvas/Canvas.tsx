@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getVisiblePlayers } from "../../redux/game/selectors";
 import { deletePlayerAction } from "../../redux/game/reducer";
 import { Player } from "../../redux/game/types";
-import { getResolution } from "../../utils";
+import { getResolution } from "../../utils/utils";
 
 export default function Canvas({ map }: { map: Leaflet.Map }): null {
   const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas | null>(null);

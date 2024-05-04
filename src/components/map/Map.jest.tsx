@@ -15,6 +15,9 @@ jest.mock('leaflet', () => ({
         setView: jest.fn(),
     })),
     latLng: jest.fn(),
+    tileLayer: jest.fn(()=>({
+        addTo: jest.fn()
+    }))
 }));
 
 describe('Map', () => {
