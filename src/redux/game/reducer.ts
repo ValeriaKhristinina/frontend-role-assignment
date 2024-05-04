@@ -56,8 +56,11 @@ export const gameSlice = createSlice({
             newPlayers.push(player);
             state.data = newPlayers;
         },
+        deletePlayerAction: (state: GameState, action: PayloadAction<number>) => {
+            state.data = state.data.filter((player) => player.id !== action.payload)
+        }
     },
 });
 
-export const { getAddPlayerAction } = gameSlice.actions;
+export const { getAddPlayerAction, deletePlayerAction } = gameSlice.actions;
 export default gameSlice.reducer;
