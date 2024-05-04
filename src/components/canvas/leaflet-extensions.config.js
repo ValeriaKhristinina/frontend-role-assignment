@@ -39,6 +39,8 @@ export const LeafletFabricLayer = (
         const topLeft = this._map.containerPointToLayerPoint([0, 0]);
         Leaflet.DomUtil.setPosition(this._fabricCanvas.upperCanvasEl, topLeft);
         Leaflet.DomUtil.setPosition(this._fabricCanvas.lowerCanvasEl, topLeft);
+         const del = this._delegate || this;
+         del.onLayerDidMove && del.onLayerDidMove();
     },
 
     getEvents: function () {
