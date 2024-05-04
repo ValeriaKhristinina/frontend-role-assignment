@@ -2,10 +2,9 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import './style.css';
-import Map from './components/map/Map';
-import Button from './components/button/Button';
 import useConstructor from './useConstructor';
 import ExtendLeafletPrototypes from './components/canvas/leaflet-extensions.config';
+import Locations from './components/locations/Locations'
 
 function App() {
     useConstructor(() => {
@@ -13,10 +12,9 @@ function App() {
     });
 
     return (
-        <Provider store={store}>
-            <Map />
-            <Button text={'Show Locations'} />
-        </Provider>
+      <Provider store={store}>
+        <Locations/>
+      </Provider>
     );
 }
 

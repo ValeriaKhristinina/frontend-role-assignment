@@ -10,4 +10,5 @@ export type Player = {
 
 export type GameState = {
     data: Player[];
+    isShowLocation: boolean
 };

@@ -3,14 +3,14 @@ import { LeafletFabricLayer } from "./leaflet-extensions.config";
 import * as Leaflet from "leaflet";
 import { fabric } from "fabric";
 import { useSelector, useDispatch } from "react-redux";
-import { getGamePlayers } from "../../redux/game/selectors";
+import { getVisiblePlayers } from "../../redux/game/selectors";
 import { deletePlayerAction } from "../../redux/game/reducer";
 import { Player } from "../../redux/game/types";
 import { getResolution } from "../../utils";
 
 export default function Canvas({ map }: { map: Leaflet.Map }): null {
   const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas | null>(null);
-  const data = useSelector(getGamePlayers);
+  const data = useSelector(getVisiblePlayers);
   const dispatch = useDispatch();
 
   // We need to use ref because of closure we pass into LeafletFabricLayer class.
@@ -26,9 +26,8 @@ export default function Canvas({ map }: { map: Leaflet.Map }): null {
 
   const renderPlayers = (canvas: fabric.Canvas) => {
     canvas.remove(...canvas.getObjects());
-    const resolution = getResolution(map.getCenter(), map.getZoom())
 
-
+    const resolution = getResolution(map.getCenter(), map.getZoom());
     dataRef.current.map((player) => {
       const coordinates = getPoint(
         player.position.latitude,
@@ -42,10 +41,10 @@ export default function Canvas({ map }: { map: Leaflet.Map }): null {
           left: coordinates.x,
           top: coordinates.y,
           fill: "white",
-          width: 7 /resolution,
+          width: 7 / resolution,
           height: 7 / resolution,
           stroke: "red",
-          strokeWidth: 1.5 /resolution
+          strokeWidth: 1.5 / resolution
         });
       }
       if (player.teamName === "blue") {
@@ -53,9 +52,9 @@ export default function Canvas({ map }: { map: Leaflet.Map }): null {
           left: coordinates.x,
           top: coordinates.y,
           fill: "blue",
-          radius: 4/resolution,
+          radius: 4 / resolution,
           stroke: "white",
-          strokeWidth: 1.5 /resolution
+          strokeWidth: 1.5 / resolution
         });
       }
 
@@ -64,8 +63,6 @@ export default function Canvas({ map }: { map: Leaflet.Map }): null {
         dispatch(deletePlayerAction(player.id));
       });
     });
-
-    canvas.requestRenderAll();
   };
 
   useEffect(() => {
@@ -79,13 +76,12 @@ export default function Canvas({ map }: { map: Leaflet.Map }): null {
     };
 
     const onMove = () => {
-      console.log("onMove");
       renderPlayers(fabricCanvasRef.current);
     };
 
     fabricLayer.delegate({
       onLayerDidMount: fabricLayerDidMount,
-      onLayerDidMove: onMove,
+      onLayerDidMove: onMove
     });
     fabricLayer.addTo(map);
   }, [map]);

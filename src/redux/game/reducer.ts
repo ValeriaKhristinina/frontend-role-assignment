@@ -40,6 +40,7 @@ const gameInitialState: GameState = {
             teamName: 'red',
         },
     ],
+    isShowLocation: false
 };
 
 export const GET_PLAYERS = `game/getGameAction`;
@@ -58,9 +59,12 @@ export const gameSlice = createSlice({
         },
         deletePlayerAction: (state: GameState, action: PayloadAction<number>) => {
             state.data = state.data.filter((player) => player.id !== action.payload)
+        },
+        toggleLocationAction: (state: GameState) => {
+            state.isShowLocation = !state.isShowLocation
         }
     },
 });
 
-export const { getAddPlayerAction, deletePlayerAction } = gameSlice.actions;
+export const { getAddPlayerAction, deletePlayerAction, toggleLocationAction } = gameSlice.actions;
 export default gameSlice.reducer;
