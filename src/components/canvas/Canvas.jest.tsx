@@ -23,11 +23,6 @@ jest.doMock('./leaflet-extensions.config', () => ({
 
 const Canvas = require('./Canvas').default;
 
-const mockData = [
-    { id: 1, position: { latitude: 10, longitude: 20 }, teamName: 'red' },
-    { id: 2, position: { latitude: 15, longitude: 25 }, teamName: 'blue' }
-  ];
-
 describe('Canvas', () => {
     it('returns null', () => {
         const { container } = renderWithProviders(

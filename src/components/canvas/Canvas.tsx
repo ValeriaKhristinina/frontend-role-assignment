@@ -35,16 +35,19 @@ export default function Canvas({ map }: { map: Leaflet.Map }): null {
       );
 
       let elem;
+      const strokeWidth = 1.5 / resolution
 
       if (player.teamName === "red") {
+        const size  = 7 / resolution
+        
         elem = new fabric.Rect({
           left: coordinates.x,
           top: coordinates.y,
           fill: "white",
-          width: 7 / resolution,
-          height: 7 / resolution,
+          width: size,
+          height: size,
           stroke: "red",
-          strokeWidth: 1.5 / resolution
+          strokeWidth, 
         });
       }
       if (player.teamName === "blue") {
@@ -54,12 +57,12 @@ export default function Canvas({ map }: { map: Leaflet.Map }): null {
           fill: "blue",
           radius: 4 / resolution,
           stroke: "white",
-          strokeWidth: 1.5 / resolution
+          strokeWidth,
         });
       }
 
       canvas.add(elem);
-      elem.on("mousedown", (element) => {
+      elem.on("mousedown", () => {
         dispatch(deletePlayerAction(player.id));
       });
     });

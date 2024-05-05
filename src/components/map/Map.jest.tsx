@@ -37,5 +37,15 @@ describe('Map', () => {
 
         expect(Leaflet.map).toHaveBeenCalledTimes(1);
         expect(Leaflet.map).toHaveBeenCalledWith('mapid', expect.any(Object));
+
+        expect(Leaflet.tileLayer).toHaveBeenCalledTimes(1)
+        expect(Leaflet.tileLayer).toHaveBeenCalledWith(
+            "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", 
+            expect.objectContaining({
+                tileSize: 512,
+                zoomOffset: -1,
+                id: "mapbox/streets-v9",
+            })
+        )
     });
 });

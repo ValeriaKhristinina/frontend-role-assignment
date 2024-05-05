@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GameState, Player } from './types';
 
-const gameInitialState: GameState = {
+export const gameInitialState: GameState = {
     data: [
         {
             id: 1,
