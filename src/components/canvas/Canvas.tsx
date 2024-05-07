@@ -5,20 +5,13 @@ import { fabric } from "fabric";
 import { useSelector, useDispatch } from "react-redux";
 import { getVisiblePlayers } from "../../redux/game/selectors";
 import { deletePlayerAction } from "../../redux/game/reducer";
-import { Player } from "../../redux/game/types";
 import { getResolution } from "../../utils/utils";
 
 export default function Canvas({ map }: { map: Leaflet.Map }): null {
+  const [fabricLayer, setFabricLayer] = useState(null);
   const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas | null>(null);
   const data = useSelector(getVisiblePlayers);
   const dispatch = useDispatch();
-
-  // We need to use ref because of closure we pass into LeafletFabricLayer class.
-  //We have 'old' this in that class
-  const fabricCanvasRef = useRef<fabric.Canvas | null>();
-  const dataRef = useRef<Player[] | null>(null);
-  dataRef.current = data;
-  fabricCanvasRef.current = fabricCanvas;
 
   const getPoint = (lat: number, long: number) => {
     return map.latLngToContainerPoint([lat, long]);
@@ -28,18 +21,18 @@ export default function Canvas({ map }: { map: Leaflet.Map }): null {
     canvas.remove(...canvas.getObjects());
 
     const resolution = getResolution(map.getCenter(), map.getZoom());
-    dataRef.current.map((player) => {
+    data.map((player) => {
       const coordinates = getPoint(
         player.position.latitude,
         player.position.longitude
       );
 
       let elem;
-      const strokeWidth = 1.5 / resolution
+      const strokeWidth = 1.5 / resolution;
 
       if (player.teamName === "red") {
-        const size  = 7 / resolution
-        
+        const size = 7 / resolution;
+
         elem = new fabric.Rect({
           left: coordinates.x,
           top: coordinates.y,
@@ -47,7 +40,7 @@ export default function Canvas({ map }: { map: Leaflet.Map }): null {
           width: size,
           height: size,
           stroke: "red",
-          strokeWidth, 
+          strokeWidth
         });
       }
       if (player.teamName === "blue") {
@@ -57,7 +50,7 @@ export default function Canvas({ map }: { map: Leaflet.Map }): null {
           fill: "blue",
           radius: 4 / resolution,
           stroke: "white",
-          strokeWidth,
+          strokeWidth
         });
       }
 
@@ -77,24 +70,29 @@ export default function Canvas({ map }: { map: Leaflet.Map }): null {
       fabricCanvas.requestRenderAll();
       setFabricCanvas(fabricCanvas);
     };
-
-    const onMove = () => {
-      renderPlayers(fabricCanvasRef.current);
-    };
+    setFabricLayer(fabricLayer);
 
     fabricLayer.delegate({
-      onLayerDidMount: fabricLayerDidMount,
-      onLayerDidMove: onMove
+      onLayerDidMount: fabricLayerDidMount
     });
     fabricLayer.addTo(map);
   }, [map]);
 
   // in this use effect I delete all object and create new if state was changed
+  // and recreate callback onMove
   useEffect(() => {
-    if (fabricCanvasRef.current) {
-      renderPlayers(fabricCanvasRef.current);
+    const onMove = () => {
+      renderPlayers(fabricCanvas);
+    };
+
+    if (fabricCanvas) {
+      renderPlayers(fabricCanvas);
     }
-  }, [data]);
+
+    fabricLayer?.delegate({
+      onLayerDidMove: onMove
+    });
+  }, [data, fabricCanvas, fabricLayer]);
 
   if (!fabricCanvas) return null;
 
